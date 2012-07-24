@@ -1,0 +1,7 @@
+<!doctype html>
+<title>ToyApp's keys so far</title>
+{% for key in keys %}
+<div>
+{{ key.key }} : {{ key.val }}@{{ key.ts }}
+</div>
+{% endfor %}
