@@ -1,10 +1,20 @@
-This is a stupid simple flask app that takes key/values with timestamps.
+The end goal of this thinger here is to take in fairly arbitrary named timeseries data and pull out simply correlated timeseries. I want to later tune it to pull out the least related timeseries which happen to be correlated (e.g., number of applicants for public funding correlated to growth rate of grass in Kentucky).
+
+This is currently a stupid simple flask app that takes key/values with timestamps.
 
 It does a very terrible job of that.
 
-Some planned improvements I have:
+First things first, I wanna do these things:
+* have an interface that lists all the garbage names - DONEish
+* names in that UI link to or expand to graphs of that garbage timeseries
+* /api/$key is a horrible location, but I don't rightly care right now
+* when one key is selected, I want to click another key and see how horribly they relate
+* when doing this, I need to fill in gaps...
+* I'm gonna try to D3 some simple scatterplots/linegraphs a la http://dealloc.me/2011/06/24/d3-is-not-a-graphing-library.html
+
+Some planned improvements I have WAY down the road:
 * stop using sqlite, duh
 * prolly switch to RRDs or whisper (graphite)
 * maybe should use opentsdb or cassandra
-* I'm gonna try to D3 some simple scatterplots/linegraphs a la http://dealloc.me/2011/06/24/d3-is-not-a-graphing-library.html
 * build up some tools for mass import of historical data
+* scrape public data and just shove it all in... see what we can get.
