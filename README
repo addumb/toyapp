@@ -1,6 +1,10 @@
-See overview here: https://docs.google.com/a/addumb.com/document/d/1e4EeSFLKgunODTEpM_s8h8SNXK76qkKMtJp5z855lb4/edit
-
 This is a stupid simple flask app that takes key/values with timestamps.
 
-I'm gonna try to D3 some simple scatterplots/linegraphs
-http://dealloc.me/2011/06/24/d3-is-not-a-graphing-library.html
+It does a very terrible job of that.
+
+Some planned improvements I have:
+* stop using sqlite, duh
+* prolly switch to RRDs or whisper (graphite)
+* maybe should use opentsdb or cassandra
+* I'm gonna try to D3 some simple scatterplots/linegraphs a la http://dealloc.me/2011/06/24/d3-is-not-a-graphing-library.html
+* build up some tools for mass import of historical data
