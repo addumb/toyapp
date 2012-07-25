@@ -1,7 +1,7 @@
 import sqlite3
 import time
 
-from flask import Flask, request, render_template, request, session, g, redirect, url_for, abort, flash
+from flask import Flask, g
 
 DATABASE = 'db.sqlite'
 DEBUG = True
