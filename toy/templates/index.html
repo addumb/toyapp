@@ -1,7 +1,10 @@
 <!doctype html>
 <title>ToyApp's keys so far</title>
-{% for key in keys %}
+{% for key, events in keys.iteritems() %}
 <div>
-{{ key.key }} : {{ key.val }}@{{ key.ts }}
+{{ key }} : 
+    {% for event in events %}
+{{ event.0}}@{{ event.1 }}
+    {% endfor %}
 </div>
 {% endfor %}

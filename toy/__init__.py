@@ -24,4 +24,3 @@ def teardown_request(exception):
     g.db.close()
 
 import toy.views
-import toy.models
