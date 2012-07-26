@@ -1,6 +1,6 @@
 import time
 
-from flask import g, render_template, request
+from flask import g, jsonify, render_template, request
 
 from toy import app
 
@@ -46,6 +46,14 @@ def index():
     # here, just spit out all the raw text over to jinja
     return render_template('index.html', keys=keys, tsrange=(mints, maxts),
         valrange=(minval, maxval))
+
+@app.route('/get/<key>', methods=['GET'])
+def get_timeseries(key):
+    '''
+    dump out (value, time) pairs so we could potentially graph them
+    '''
+    cur = g.db.execute('select `value`, `ts` from `events` where `key`=? order by `ts` desc', (key,))
+    return jsonify(cur.fetchall())
 
 @app.route('/api/<key>', methods=['POST'])
 def post_event(key):

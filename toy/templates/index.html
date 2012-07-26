@@ -1,16 +1,32 @@
 <!doctype html>
+<html>
+<head>
 <title>ToyApp's keys so far</title>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.js"></script>
+<script>window.jQuery || document.write('<script src="{{ url_for('static', filename='jquery.js') }}">\x3C/script>')</script>
+<script type=text/javascript>
+$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+$(function() {
+$("div.container a").click(function() {
+    key = this.id.substring("link-".length);
+    graph_data = $.getJSON("/get/" + key, function(data) {
+        out = ""
+        for( value in data ) {
+            out+=value + " : " + data[value] + "<br/>";
+        }
+        $("#graph-" + key).html(out);
+    });
+})
+});
+</script>
+</head>
+<body>
+
 {% for key, events in keys.iteritems() %}
-<div>
-{{ key }} : 
-    {% for event in events %}
-{{ event.0}}@{{ event.1 }}
-    {% endfor %}
+<div class="container">
+<a href="#" id="link-{{ key }}">{{key}}</a>
+<div id="graph-{{key}}"></div>
 </div>
 {% endfor %}
-I'd try to show them on a graph with
-<ul>
-<li> x-range: {{ tsrange.0 }} to {{ tsrange.1 }}</li>
-<li> y-range: {{ valrange.0 }} to {{ valrange.1 }}</li>
-</ul> 
-
+</body>
+</html>
