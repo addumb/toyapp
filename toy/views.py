@@ -1,6 +1,6 @@
 import time
 
-from flask import g, jsonify, render_template, request
+from flask import g, jsonify, make_response, render_template, request
 
 from toy import app
 
@@ -55,6 +55,18 @@ def get_timeseries(key):
     cur = g.db.execute('select `value`, `ts` from `events` where `key`=? order by `ts` desc', (key,))
     return jsonify(cur.fetchall())
 
+@app.route('/csv/<key>', methods=['GET'])
+def csv_timeseries(key):
+    '''
+    dump out (time, value) rows as csv
+    '''
+    cur = g.db.execute('select `ts`, `value` from `events` where `key`=? order by `ts` asc', (key,))
+    csvout = "time,val\n"
+    csvout += "\n".join([",".join([str(x) for x in row]) for row in cur.fetchall()])
+    resp = make_response(csvout)
+    resp.headers['Content-Type'] = 'text/plain'
+    return resp
+    
 @app.route('/api/<key>', methods=['POST'])
 def post_event(key):
     '''accept incomming POST requests to /api/$key with this body:

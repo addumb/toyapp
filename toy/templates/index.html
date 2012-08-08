@@ -3,18 +3,43 @@
 <head>
 <title>ToyApp's keys so far</title>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.js"></script>
+<script src="http://d3js.org/d3.v2.js"></script>
 <script type=text/javascript>
 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 $(function() {
 $("div.container a").click(function() {
     key = this.id.substring("link-".length);
-    graph_data = $.getJSON("/get/" + key, function(data) {
-        out = ""
-        for( value in data ) {
-            out+=value + " : " + data[value] + "<br/>";
+    realdata = [];
+    d3.csv("/csv/" + key, function(csvdata) {
+        realdata = [];
+        var maxval = 0, samplesize = 0;
+        var samplesize = csvdata.length;
+        var values = new Array(samplesize);
+
+        //loop and parse the csv into floats
+        for(var i=0; i<samplesize; i++) {
+            values[i] = {x: parseFloat(csvdata[i].time), y: parseFloat(csvdata[i].val)};
+            maxval = Math.max(maxval, values[i].y);
+            realdata[i] = [values[i].x, values[i].y];
         }
-        $("#graph-" + key).html(out);
-    });
+        var w = 500, h = 300, p = 30,
+        x = d3.scale.linear().domain([values[0].x, values[samplesize - 1].x]).range([0, w]),
+        y = d3.scale.linear().domain([0, maxval]).range([h, 0]); 
+        var vis = d3.select("#graph-" + key)
+            .append("svg:svg")
+                .attr("width", w + p * 2)
+                .attr("height", h + p * 2);
+
+        vis.selectAll('path.line')
+            .data([realdata])
+        .enter().append("svg:path")
+            .attr("fill", "none")
+            .attr("stroke", "black")
+            .attr("stroke-width", 2)
+            .attr("d", d3.svg.line()
+                .x(function(d){ return x(d[0]);})
+                .y(function(d){ return y(d[1]);}));
+})
 })
 });
 </script>
@@ -27,5 +52,6 @@ $("div.container a").click(function() {
 <div id="graph-{{key}}"></div>
 </div>
 {% endfor %}
+<div id="derpherp"></div>
 </body>
 </html>
