@@ -7,40 +7,43 @@
 <script type=text/javascript>
 $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 $(function() {
-$("div.container a").click(function() {
-    key = this.id.substring("link-".length);
-    realdata = [];
-    d3.csv("/csv/" + key, function(csvdata) {
-        realdata = [];
-        var maxval = 0, samplesize = 0;
-        var samplesize = csvdata.length;
-        var values = new Array(samplesize);
+    $("div.container a").click(
+        function show() {
+             key = this.id.substring("link-".length);
+             realdata = [];
+             d3.csv("/csv/" + key, function(csvdata) {
+                 realdata = [];
+                 var maxval = 0, samplesize = 0;
+                 var samplesize = csvdata.length;
+                 var values = new Array(samplesize);
 
-        //loop and parse the csv into floats
-        for(var i=0; i<samplesize; i++) {
-            values[i] = {x: parseFloat(csvdata[i].time), y: parseFloat(csvdata[i].val)};
-            maxval = Math.max(maxval, values[i].y);
-            realdata[i] = [values[i].x, values[i].y];
-        }
-        var w = 500, h = 300, p = 30,
-        x = d3.scale.linear().domain([values[0].x, values[samplesize - 1].x]).range([0, w]),
-        y = d3.scale.linear().domain([0, maxval]).range([h, 0]); 
-        var vis = d3.select("#graph-" + key)
-            .append("svg:svg")
-                .attr("width", w + p * 2)
-                .attr("height", h + p * 2);
+                 //loop and parse the csv into floats
+                 for(var i=0; i<samplesize; i++) {
+                     values[i] = {x: parseFloat(csvdata[i].time), y: parseFloat(csvdata[i].val)};
+                     maxval = Math.max(maxval, values[i].y);
+                     realdata[i] = [values[i].x, values[i].y];
+                 }
+                 var w = 500, h = 300, p = 30,
+                 x = d3.scale.linear().domain([values[0].x, values[samplesize - 1].x]).range([0, w]),
+                 y = d3.scale.linear().domain([0, maxval]).range([h, 0]); 
+                 var vis = d3.select("#graph-" + key + " svg")
+                     .attr("width", w + p * 2)
+                     .attr("height", h + p * 2);
+                $("#graph-" + key + " svg").empty();
 
-        vis.selectAll('path.line')
-            .data([realdata])
-        .enter().append("svg:path")
-            .attr("fill", "none")
-            .attr("stroke", "black")
-            .attr("stroke-width", 2)
-            .attr("d", d3.svg.line()
-                .x(function(d){ return x(d[0]);})
-                .y(function(d){ return y(d[1]);}));
-})
-})
+                 vis.selectAll('path.line')
+                     .data([realdata])
+                 .enter().append("svg:path")
+                     .attr("fill", "none")
+                     .attr("stroke", "black")
+                     .attr("stroke-width", 2)
+                     .attr("d", d3.svg.line()
+                         .x(function(d){ return x(d[0]);})
+                         .y(function(d){ return y(d[1]);})
+                 );
+             })
+    })
+    d3.selectAll("div.container div").append("svg:svg").attr("height", 0).attr("width", 0);
 });
 </script>
 </head>
